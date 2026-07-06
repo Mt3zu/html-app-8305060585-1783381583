@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>المحتال | النسخة الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #1e293b;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.6);
+            --accent: #38bdf8;
+            --danger: #f43f5e;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background: #050814;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Particles Background Effects */
+        .particles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
+        .particle { position: absolute; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); filter: blur(8px); opacity: 0.4; animation: float 10s infinite ease-in-out alternate; }
+        
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-100px) scale(1.5); opacity: 0.5; }
+            100% { transform: translateY(-200px) scale(0.8); opacity: 0.1; }
+        }
+
+        .app-container {
+            width: 100%; max-width: 450px; height: 100%;
+            position: relative;
+            background: radial-gradient(circle at top right, rgba(139,92,246,0.2), transparent 60%),
+                        radial-gradient(circle at bottom left, rgba(56,189,248,0.2), transparent 60%);
+            display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+            z-index: 1;
+        }
+
+        .screen {
+            display: none; flex-direction: column; width: 100%; height: 100%;
+            padding: 30px 20px; position: absolute; top: 0; left: 0; z-index: 10;
+            animation: fadeScale 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .screen.active { display: flex; }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-panel::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent); transform: skewX(-25deg); animation: shine 6s infinite; }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+        /* Typography & Icons */
+        .title { font-size: 42px; font-weight: 900; background: linear-gradient(to right, var(--accent), #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 5px; text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); animation: pulseText 2s infinite; }
+        @keyframes pulseText { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
+        .subtitle { color: var(--accent); text-align: center; margin-bottom: 30px; font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(45deg, var(--primary), #6d28d9);
+            color: white; border: none; padding: 18px; border-radius: 16px;
+            font-size: 18px; font-weight: 700; cursor: pointer; width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            box-shadow: 0 10px 25px var(--primary-glow);
+            position: relative; overflow: hidden;
+        }
+        .btn::after { content: ''; position: absolute; top: 50%; left: 50%; width: 300px; height: 300px; background: rgba(255,255,255,0.2); border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s; }
+        .btn:active::after { transform: translate(-50%, -50%) scale(1); transition: 0s; }
+        .btn:active { transform: translateY(4px) scale(0.98); box-shadow: 0 5px 10px var(--primary-glow); }
+        .btn-outline { background: rgba(255,255,255,0.05); border: 2px solid var(--glass-border); box-shadow: none; color: var(--text-main); backdrop-filter: blur(5px); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: rgba(56, 189, 248, 0.1); }
+        .btn-danger { background: linear-gradient(45deg, var(--danger), #be123c); box-shadow: 0 10px 25px rgba(244, 63, 94, 0.4); }
+
+        /* Settings UI */
+        .setting-row { margin-bottom: 25px; transition: 0.3s; }
+        .setting-row:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .setting-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--accent); font-weight: 700; font-size: 18px; }
+        
+        .counter { display: flex; align-items: center; justify-content: center; gap: 20px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 16px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+        .counter-btn { background: var(--glass-bg); color: var(--primary); border: 1px solid var(--glass-border); font-size: 24px; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .counter-btn:active { background: var(--primary); color: white; transform: scale(0.9); }
+        .counter-val { font-size: 34px; font-weight: 900; width: 60px; text-align: center; color: #fff; text-shadow: 0 0 10px var(--primary-glow); }
+
+        /* Categories Chips */
+        .categories-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .cat-chip { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: var(--text-dim); 
+            padding: 12px 20px; 
+            border-radius: 30px; 
+            font-weight: 700; 
+            font-size: 15px; 
+            cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            user-select: none;
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .cat-chip i { font-size: 14px; opacity: 0; transition: 0.3s; width: 0; overflow: hidden; }
+        .cat-chip.selected { 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: white; 
+            border-color: transparent; 
+            box-shadow: 0 8px 20px var(--primary-glow); 
+            transform: translateY(-4px) scale(1.05); 
+        }
+        .cat-chip.selected i { opacity: 1; width: 14px; }
+
+        /* Timer Blocks */
+        .time-blocks { display: none; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
+        .time-blocks.active { display: grid; animation: fadeScale 0.3s forwards; }
+        .time-block { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 15px 0; border-radius: 12px; font-weight: 900; font-size: 18px; text-align: center; cursor: pointer; transition: 0.3s; user-select: none; }
+        .time-block.selected { background: linear-gradient(45deg, var(--accent), var(--primary)); color: white; border-color: transparent; box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); transform: scale(1.1); }
+
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 54px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); border-radius: 34px; transition: .4s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: var(--text-dim); border-radius: 50%; transition: .4s cubic-bezier(0.4, 0, 0.2, 1); }
+        input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        input:checked + .slider:before { transform: translateX(26px); background-color: white; }
+
+        /* Flip Card (Improved Design) */
+        .flip-container { perspective: 1500px; width: 100%; height: 55vh; max-height: 450px; margin: auto; }
+        .flip-card { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; cursor: pointer; position: relative; }
+        .flip-card.flipped { transform: rotateY(180deg); }
+        
+        .flip-front, .flip-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        
+        .flip-front {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0,0,0,0.4);
+            transition: 0.3s;
+        }
+        /* إطار داخلي متقطع يعطي شكل احترافي */
+        .flip-front::before {
+            content: ''; position: absolute; inset: 12px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 20px; pointer-events: none;
+        }
+        .flip-front:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
+        .flip-front i { font-size: 85px; color: var(--accent); margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(56,189,248,0.6)); animation: pulseText 2s infinite; z-index: 2;}
+        .flip-front h2 { color: white; font-size: 34px; font-weight: 900; z-index: 2; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .flip-front p { color: rgba(255,255,255,0.7); margin-top: 15px; font-size: 17px; z-index: 2; font-weight: 700; }
+
+        /* تحسينات الخلفية (المواطن والمحتال) */
+        .flip-back { 
+            transform: rotateY(180deg); background: var(--bg-light); border: 1px solid var(--glass-border); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7); overflow: hidden; position: relative;
+        }
+        /* تأثير إضاءة لامعة (Glare) للبطاقات المقلوبة */
+        .flip-back::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg); pointer-events: none; z-index: 1;
+        }
+
+        .flip-back.imposter { 
+            background: radial-gradient(circle at top left, #be123c, #881337, #4c0519); 
+            border: 2px solid var(--danger); 
+            box-shadow: 0 0 50px rgba(244, 63, 94, 0.5), inset 0 0 30px rgba(0,0,0,0.5); 
+        }
+        .flip-back.citizen { 
+            background: radial-gradient(circle at top left, #059669, #064e3b, #022c22); 
+            border: 2px solid var(--success); 
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.5), inset 0 0 30px rgba(0,0,0,0.5); 
+        }
+        
+        /* Action Screen */
+        .timer-display { font-size: 75px; font-weight: 900; text-align: center; color: var(--accent); font-family: monospace; text-shadow: 0 0 25px rgba(56,189,248,0.6); margin: 20px 0; }
+        .timer-display.danger { color: var(--danger); text-shadow: 0 0 25px rgba(244,63,94,0.6); animation: pulseTimer 1s infinite; }
+        @keyframes pulseTimer { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+        .who-starts { background: linear-gradient(to left, rgba(255,255,255,0.1), transparent); padding: 18px; border-radius: 16px; text-align: center; margin-bottom: 20px; border-right: 5px solid var(--accent); font-size: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        .discussion-box { background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        .discussion-text { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 20px; transition: 0.3s; line-height: 1.4; }
+
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: rgba(30, 41, 59, 0.9); border: 1px solid var(--glass-border); padding: 35px; border-radius: 28px; width: 100%; max-width: 400px; text-align: center; animation: fadeScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-content h3 { color: var(--primary); font-size: 28px; margin-bottom: 20px; font-weight: 900; }
+        .modal-content p { color: var(--text-dim); line-height: 1.8; margin-bottom: 25px; text-align: justify; font-size: 16px; }
+
+        /* Developer & Socials */
+        .dev-badge {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 700;
+            color: var(--text-dim); display: inline-flex; align-items: center; gap: 8px;
+            margin: 15px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2); backdrop-filter: blur(5px);
+        }
+        .dev-badge i { color: var(--primary); }
+        .dev-badge span { color: #fff; background: linear-gradient(to left, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+
+        .social-container { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .social-btn { 
+            width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-size: 24px; color: white; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid transparent; 
+        }
+        .social-btn:hover { transform: translateY(-5px) scale(1.1); }
+        .social-btn.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); border-color: rgba(255,255,255,0.2); }
+        .social-btn.instagram:hover { box-shadow: 0 10px 20px rgba(214, 36, 159, 0.4); }
+        .social-btn.whatsapp { background: #25D366; }
+        .social-btn.whatsapp:hover { box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4); }
+        .social-btn.telegram { background: #0088cc; }
+        .social-btn.telegram:hover { box-shadow: 0 10px 20px rgba(0, 136, 204, 0.4); }
+
+    </style>
+</head>
+<body>
+
+<div class="particles-container" id="particles"></div>
+
+<div class="app-container">
+
+    <div id="screen-home" class="screen active">
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <i class="fas fa-user-ninja" style="font-size: 100px; color: var(--primary); text-align: center; margin-bottom: 15px; filter: drop-shadow(0 0 25px var(--primary-glow)); animation: float 4s infinite ease-in-out alternate;"></i>
+            
+            <div class="dev-badge">
+                <i class="fas fa-code"></i> تم التطوير بواسطة <span>وليد </span>
+            </div>
+
+            <div class="title">المحتال؟</div>
+            <div class="subtitle">نسخة النخبة الاحترافية</div>
+            
+            <button class="btn" onclick="playClick(); showScreen('screen-settings')" style="margin-bottom: 15px;">
+                <i class="fas fa-play"></i> إعداد الغرفة
+            </button>
+            <button class="btn btn-outline" onclick="playClick(); document.getElementById('how-to-play').style.display='flex'">
+                <i class="fas fa-book-open"></i> كيف تلعب؟
+            </button>
+
+            <!-- حقوق المطور وروابط التواصل -->
+            <div class="social-container">
+                <a href="https://instagram.com/_f5rpw" target="_blank" class="social-btn instagram" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/213562906794" target="_blank" class="social-btn whatsapp" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://t.me/ouui_8" target="_blank" class="social-btn telegram" title="Telegram 1">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+                <a href="https://t.me/K_H_5_3" target="_blank" class="social-btn telegram" title="Telegram 2">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-settings" class="screen">
+        <h2 style="text-align: center; margin-bottom: 30px; font-weight: 900; font-size: 32px; text-shadow: 0 0 15px rgba(255,255,255,0.2);">التجهيزات</h2>
+
+        <div class="glass-panel setting-row">
+            <div class="setting-header">
+                <span><i class="fas fa-users"></i> عدد اللاعبين</span>
+            </div>
+            <div class="counter">
+                <button class="counter-btn" onclick="playClick(); updatePlayers(-1)"><i class="fas fa-minus"></i></button>
+                <div class="counter-val" id="player-count">3</div>
+                <button class="counter-btn" onclick="playClick(); updatePlayers(1)"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+
+        <div class="glass-panel setting-row">
+            <div class="setting-header">
+                <span><i class="fas fa-layer-group"></i> الفئات</span>
+            </div>
+            <div class="categories-grid" id="categories-container">
+                <!-- يتم توليد الفئات برمجياً هنا بتأثيرات جديدة -->
+            </div>
+        </div>
+
+        <div class="glass-panel setting-row">
+            <div class="setting-header">
+                <span><i class="fas fa-hourglass-half"></i> مؤقت النقاش</span>
+                <label class="switch">
+                    <input type="checkbox" id="timer-toggle" onchange="playClick(); toggleTimerSettings()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="time-blocks" id="time-blocks-container">
+                <div class="time-block" onclick="playClick(); selectTime(2)">2</div>
+                <div class="time-block" onclick="playClick(); selectTime(4)">4</div>
+                <div class="time-block" onclick="playClick(); selectTime(6)">6</div>
+                <div class="time-block" onclick="playClick(); selectTime(8)">8</div>
+                <div class="time-block" onclick="playClick(); selectTime(10)">10</div>
+            </div>
+        </div>
+
+        <div style="flex: 1;"></div>
+        <button class="btn" onclick="startGame()">بدء التوزيع <i class="fas fa-arrow-left"></i></button>
+    </div>
+
+    <div id="screen-pass" class="screen">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <span style="background: var(--glass-bg); padding: 10px 25px; border-radius: 30px; font-weight: 900; border: 1px solid var(--glass-border); box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-size: 18px;">
+                اللاعب <span id="current-player" style="color: var(--accent); font-size: 22px;">1</span> / <span id="total-players">3</span>
+            </span>
+        </div>
+
+        <div class="flip-container">
+            <div class="flip-card" id="the-card">
+                <div class="flip-front">
+                    <i class="fas fa-fingerprint"></i>
+                    <h2>اضغط مطولاً</h2>
+                    <p>اكشف السر بدون أن يراك أحد</p>
+                </div>
+                <div class="flip-back" id="card-back-content">
+                    </div>
+            </div>
+        </div>
+
+        <div style="flex: 1;"></div>
+        <div style="text-align: center; color: var(--text-dim); font-size: 15px; margin-bottom: 15px; font-weight: bold;">مرر الهاتف للاعب التالي بعد رؤية بطاقتك</div>
+        <button id="btn-next" class="btn" onclick="nextPlayer()" style="opacity: 0.3; pointer-events: none; transition: 0.5s;">اللاعب التالي</button>
+    </div>
+
+    <div id="screen-action" class="screen">
+        <h2 style="text-align: center; color: var(--danger); font-weight: 900; font-size: 36px; margin-bottom: 15px; text-shadow: 0 0 20px rgba(244,63,94,0.5);">بدأ الاستجواب!</h2>
+        
+        <div class="who-starts">
+            🎯 <span id="who-starts-text" style="font-weight: 900; color: var(--accent); font-size: 22px;">اللاعب X</span> يبدأ بطرح السؤال الأول.
+        </div>
+
+        <div id="timer-container" style="display: none;">
+            <div class="timer-display" id="timer-display">00:00</div>
+        </div>
+
+        <div class="discussion-box">
+            <div class="discussion-text" id="discussion-prompt">لا تعرف ماذا تسأل؟</div>
+            <button class="btn btn-outline" style="padding: 12px 25px; border-radius: 12px; font-size: 16px; border-color: rgba(251, 191, 36, 0.5);" onclick="playClick(); generatePrompt()">
+                <i class="fas fa-lightbulb" style="color: #fbbf24; text-shadow: 0 0 10px rgba(251,191,36,0.8);"></i> اقترح سؤالاً ذكياً
+            </button>
+        </div>
+
+        <div style="flex: 1;"></div>
+        <button class="btn btn-danger" onclick="playClick(); document.getElementById('reveal-modal').style.display='flex'">
+            <i class="fas fa-gavel"></i> كشف المحتال (إنهاء)
+        </button>
+    </div>
+
+    <div id="screen-result" class="screen" style="justify-content: center; text-align: center;">
+        <h1 style="font-size: 55px; margin-bottom: 15px; background: linear-gradient(to right, #fff, var(--text-dim)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">النهاية!</h1>
+        
+        <div class="glass-panel" style="margin: 20px 0 30px; border-color: var(--danger); animation: pulseTimer 2s infinite;">
+            <i class="fas fa-user-secret" style="font-size: 70px; color: var(--danger); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(244,63,94,0.5));"></i>
+            <h2 style="color: var(--danger); font-size: 36px; font-weight: 900;">اللاعب <span id="final-imposter">X</span></h2>
+            <p style="color: #fff; font-size: 18px; margin-top: 10px;">كان هو المحتال المتخفي!</p>
+        </div>
+
+        <div class="glass-panel" style="margin-bottom: 40px; cursor: pointer; border-style: dashed; transition: 0.4s;" onclick="playClick(); this.querySelector('h2').style.filter='blur(0)'; this.style.borderColor='var(--success)';">
+            <p style="color: var(--text-dim); font-size: 16px; margin-bottom: 10px; font-weight: bold;">اضغط هنا لكشف الكلمة للجميع</p>
+            <h2 id="final-word" style="font-size: 45px; font-weight: 900; color: var(--success); filter: blur(15px); transition: 0.8s; text-shadow: 0 0 20px rgba(16,185,129,0.5);">الكلمة</h2>
+        </div>
+
+        <button class="btn btn-outline" onclick="playClick(); resetGame()"><i class="fas fa-redo"></i> العودة للرئيسية للعب مجدداً</button>
+    </div>
+
+    <div class="modal-overlay" id="how-to-play">
+        <div class="modal-content">
+            <h3>كيف تلعب؟ 🕵️‍♂️</h3>
+            <p>1. الجميع سيستلم <b>نفس الكلمة السرية</b> باستثناء شخص واحد سيكون هو <b>المحتال</b>.<br><br>
+               2. المحتال <b>لا يعرف الكلمة ولا يعرف الفئة</b>، وعليه أن يندمج مع البقية!<br><br>
+               3. تبدأ مرحلة الاستجواب، يسأل اللاعبون بعضهم البعض أسئلة غامضة عن الكلمة (مثال: هل تستخدمه يومياً؟).<br><br>
+               4. هدف البقية معرفة من المحتال، وهدف المحتال الاندماج ومعرفة الكلمة دون أن ينكشف!</p>
+            <button class="btn" onclick="playClick(); document.getElementById('how-to-play').style.display='none'">فهمت، لنبدأ!</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reveal-modal">
+        <div class="modal-content" style="border-color: var(--danger); box-shadow: 0 0 30px rgba(244,63,94,0.3);">
+            <h3 style="color: var(--danger); font-size: 32px;"><i class="fas fa-exclamation-triangle"></i> تحذير!</h3>
+            <p style="font-size: 18px; text-align: center;">هل أنتم متأكدون من إنهاء النقاش وكشف النتيجة وتحديد المحتال الآن؟</p>
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button class="btn btn-danger" onclick="showResult()">نعم، أنهِ اللعبة</button>
+                <button class="btn btn-outline" onclick="playClick(); document.getElementById('reveal-modal').style.display='none'">تراجع</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ==========================================
+    // إنشاء الجسيمات (Particles Effect)
+    // ==========================================
+    function createParticles() {
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            let particle = document.createElement('div');
+            particle.className = 'particle';
+            let size = Math.random() * 60 + 20;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // ==========================================
+    // قاعدة البيانات والأفكار (تم توسيعها بشكل هائل)
+    // ==========================================
+    const wordsDB = {
+        'أشياء ومقتنيات': ['هاتف', 'مفتاح', 'ساعة', 'نظارات', 'حقيبة', 'محفظة', 'عطر', 'حاسوب', 'قلم', 'شاحن', 'كتاب', 'مقص', 'مظلة', 'فرشاة أسنان', 'وسادة', 'مصباح', 'كاميرا', 'خاتم', 'سماعات', 'طابعة', 'مرآة', 'كرسي', 'طاولة', 'تلفاز', 'مكنسة', 'مكواة', 'ولاعة', 'سكين', 'شوكة', 'ملعقة', 'سجادة', 'لوحة', 'مزهرية', 'دفتر', 'ممحاة', 'سبورة', 'خزانة', 'سرير', 'باب', 'نافذة', 'ستارة', 'مروحة', 'ثلاجة', 'غسالة', 'فرن', 'صحن', 'كأس', 'إبريق', 'مقلاة', 'طنجرة', 'سيف', 'درع', 'رمح', 'بندقية', 'مسدس', 'قنبلة', 'صاروخ', 'طائرة ورقية', 'لعبة', 'دمية'],
+        'أماكن عامة': ['مستشفى', 'مدرسة', 'مطار', 'مطعم', 'ملعب', 'سجن', 'مسرح', 'بنك', 'محطة قطار', 'متحف', 'حديقة', 'مقهى', 'مكتبة', 'مسجد', 'فندق', 'شاطئ', 'صالة رياضية', 'سينما', 'مجمع تجاري', 'صيدلية', 'سوبر ماركت', 'مركز شرطة', 'عيادة', 'مسبح', 'محطة وقود', 'جامعة', 'مصنع', 'شركة', 'غابة', 'جبل', 'صحراء', 'جزيرة', 'قرية', 'مدينة', 'قصر', 'قلعة', 'كنيسة', 'معبد', 'سفارة', 'وزارة', 'محكمة', 'برلمان', 'بلدية', 'مخبز', 'مقهى إنترنت', 'صالون حلاقة', 'متجر ملابس', 'سوق', 'معرض', 'حديقة حيوان', 'ملاهي'],
+        'طعام ومشروبات': ['بيتزا', 'قهوة', 'شاورما', 'تفاح', 'شوكولاتة', 'عصير', 'أرز', 'برجر', 'آيس كريم', 'بطاطس', 'شاي', 'حليب', 'جبن', 'خبز', 'بيض', 'سمك', 'لحم مشوي', 'دجاج مقلي', 'سلطة', 'معكرونة', 'كعكة', 'عنب', 'بطيخ', 'موز', 'برتقال', 'فراولة', 'ماء', 'شوربة', 'تمر', 'عسل', 'زبدة', 'مربى', 'زيتون', 'فول', 'حمص', 'فلافل', 'كباب', 'سوشي', 'طاجين', 'كسكسي', 'بسكويت', 'فطيرة', 'كرواسون', 'مانجو', 'أناناس', 'كيوي', 'خوخ', 'مشمش', 'كرز', 'توت', 'رمان', 'تين', 'ليمون', 'بصل', 'ثوم', 'طماطم', 'خيار', 'جزر', 'فلفل', 'باذنجان'],
+        'وظائف ومهن': ['طبيب', 'معلم', 'مهندس', 'شرطي', 'طيار', 'طباخ', 'محامي', 'مبرمج', 'نجار', 'حلاق', 'صحفي', 'مصور', 'قاضي', 'ممرض', 'صيدلي', 'رجل إطفاء', 'فلاح', 'خباز', 'جزار', 'ميكانيكي', 'خياط', 'سائق', 'محاسب', 'فنان', 'ممثل', 'مغني', 'كاتب', 'رياضي', 'عالم', 'حارس أمن', 'جندي', 'بحار', 'رائد فضاء', 'عمدة', 'وزير', 'رئيس', 'ملك', 'أمير', 'حداد', 'صائغ', 'بناء', 'سباك', 'كهربائي', 'صباغ', 'عامل نظافة', 'حارس', 'مدير', 'سكرتير', 'مترجم', 'مرشد سياحي', 'مضيف طيران', 'حكم'],
+        'حيوانات': ['أسد', 'فيل', 'قطة', 'كلب', 'حصان', 'نمر', 'زرافة', 'قرد', 'أرنب', 'طائر', 'سمكة', 'بقرة', 'غنم', 'دجاجة', 'بطة', 'ذئب', 'ثعلب', 'دب', 'غزال', 'تمساح', 'ثعبان', 'سلحفاة', 'ضفدع', 'حوت', 'دولفين', 'قرش', 'بطريق', 'نسر', 'بومة', 'خفاش', 'فهد', 'ضبع', 'خنزير', 'ماعز', 'جمل', 'حمار', 'بغلة', 'فأر', 'سنجاب', 'قنفذ', 'عقرب', 'عنكبوت', 'نحلة', 'نملة', 'فراشة', 'ذبابة', 'بعوضة', 'صرصور', 'دودة', 'حلزون', 'أخطبوط', 'سرطان البحر', 'نجمة البحر', 'حصان البحر']
+    };
+
+    const discussionPrompts = [
+        "هل هذا الشيء يؤكل أو يشرب؟", "هل تمتلك هذا الشيء في منزلك؟", "ما هو الحجم التقريبي لهذا الشيء؟",
+        "أين نجد هذا الشيء عادةً؟", "هل هو شيء مكلف أم رخيص؟", "متى كانت آخر مرة رأيت أو استخدمت هذا الشيء؟",
+        "هل يحبه الأطفال أم الكبار أكثر؟", "ما هو اللون الشائع لهذا الشيء؟", "هل يمكن وضعه في الجيب؟",
+        "هل يحتاج إلى كهرباء أو بطارية ليعمل؟", "هل هذا الشيء يصدر صوتاً؟", "هل هو مصنوع من الخشب أم البلاستيك أم المعدن؟",
+        "هل نستخدمه كل يوم أم في مناسبات معينة؟", "هل هو كائن حي؟", "إذا فقدت هذا الشيء، هل ستحزن كثيراً؟",
+        "هل هو ثقيل لدرجة لا يمكن حمله؟", "هل يمكن شراؤه من البقالة؟", "هل يوجد في كل المدن أم في أماكن محددة فقط؟",
+        "هل يمتلك رائحة مميزة؟", "هل هو شيء خطير إذا أسيء استخدامه؟", "هل يمكن إهداؤه في عيد الميلاد؟",
+        "هل هو سائل أم صلب؟", "هل يمكن العيش بدونه بسهولة؟", "هل يحتاج إلى صيانة وتنظيف مستمر؟"
+    ];
+
+    let playersCount = 3, timerEnabled = false, selectedMinutes = 0, activeCategories = [];
+    let currentPlayer = 1, imposterIndex = 1, currentCategory = "", currentWord = "", cardSeen = false, countdownInterval;
+
+    // ==========================================
+    // إعدادات الصوت (Audio API - مطور)
+    // ==========================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function initAudio() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+    }
+    
+    // ربط مبدئي للصوت مع أول ضغطة لتخطي حماية المتصفح
+    document.body.addEventListener('touchstart', initAudio, { once: true });
+    document.body.addEventListener('click', initAudio, { once: true });
+
+    function playTone(type) {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'tick') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now); osc.stop(now + 0.1);
+        } else if (type === 'buzzer') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(120, now);
+            gain.gain.setValueAtTime(0.4, now); gain.gain.linearRampToValueAtTime(0.01, now + 1.5);
+            osc.start(now); osc.stop(now + 1.5);
+        } else if (type === 'flip') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'click') {
+            osc.type = 'square'; osc.frequency.setValueAtTime(600, now);
+            gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'start') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
+            osc.frequency.linearRampToValueAtTime(600, now + 0.3);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+            osc.start(now); osc.stop(now + 0.5);
+        }
+    }
+
+    function playClick() { playTone('click'); }
+
+    // ==========================================
+    // واجهة المستخدم وإعدادات اللعبة
+    // ==========================================
+    function initCategories() {
+        const container = document.getElementById('categories-container');
+        container.innerHTML = '';
+        Object.keys(wordsDB).forEach(cat => {
+            activeCategories.push(cat);
+            const div = document.createElement('div');
+            div.className = 'cat-chip selected';
+            div.innerHTML = `<i class="fas fa-check"></i> ${cat}`;
+            div.onclick = () => {
+                playClick();
+                div.classList.toggle('selected');
+                if(activeCategories.includes(cat)) {
+                    activeCategories = activeCategories.filter(c => c !== cat);
+                } else {
+                    activeCategories.push(cat);
+                }
+            };
+            container.appendChild(div);
+        });
+    }
+
+    window.onload = () => { initCategories(); };
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function updatePlayers(change) {
+        playersCount = Math.max(3, playersCount + change);
+        document.getElementById('player-count').innerText = playersCount;
+    }
+
+    function toggleTimerSettings() {
+        timerEnabled = document.getElementById('timer-toggle').checked;
+        const blocks = document.getElementById('time-blocks-container');
+        if(timerEnabled) {
+            blocks.classList.add('active'); selectTime(4);
+        } else {
+            blocks.classList.remove('active'); selectedMinutes = 0;
+        }
+    }
+
+    function selectTime(mins) {
+        selectedMinutes = mins;
+        document.querySelectorAll('.time-block').forEach(b => b.classList.remove('selected'));
+        event.target.classList.add('selected');
+    }
+
+    function startGame() {
+        playTone('start');
+        if(activeCategories.length === 0) { alert("يرجى اختيار فئة واحدة على الأقل لبدء اللعب!"); return; }
+        if(timerEnabled && selectedMinutes === 0) { alert("يرجى اختيار وقت النقاش!"); return; }
+
+        currentCategory = activeCategories[Math.floor(Math.random() * activeCategories.length)];
+        const words = wordsDB[currentCategory];
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        
+        imposterIndex = Math.floor(Math.random() * playersCount) + 1;
+        currentPlayer = 1;
+        
+        updateCardUI();
+        showScreen('screen-pass');
+    }
+
+    // هنا قمت بنزع التلميح وتجميل أشكال البطاقة الخلفية
+    function updateCardUI() {
+        cardSeen = false;
+        document.getElementById('the-card').classList.remove('flipped');
+        const nextBtn = document.getElementById('btn-next');
+        nextBtn.style.opacity = '0.3'; nextBtn.style.pointerEvents = 'none';
+        nextBtn.innerHTML = currentPlayer === playersCount ? 'بدء النقاش <i class="fas fa-fire"></i>' : 'اللاعب التالي <i class="fas fa-arrow-left"></i>';
+        
+        document.getElementById('current-player').innerText = currentPlayer;
+        document.getElementById('total-players').innerText = playersCount;
+
+        const back = document.getElementById('card-back-content');
+        if (currentPlayer === imposterIndex) {
+            back.className = 'flip-back imposter';
+            back.innerHTML = `
+                <i class="fas fa-user-secret" style="font-size: 90px; color: white; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)); z-index: 2;"></i>
+                <h1 style="color: white; font-size: 45px; font-weight: 900; text-shadow: 0 0 25px rgba(255,255,255,0.6); z-index: 2; text-align: center; line-height: 1.2;">أنت<br>المحتال!</h1>
+            `;
+        } else {
+            back.className = 'flip-back citizen';
+            back.innerHTML = `
+                <i class="fas fa-shield-alt" style="font-size: 75px; color: rgba(255,255,255,0.9); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); z-index: 2;"></i>
+                <h2 style="color: rgba(255,255,255,0.8); font-size: 20px; z-index: 2;">الكلمة السرية:</h2>
+                <h1 style="color: white; font-size: 55px; margin-top: 5px; font-weight: 900; text-shadow: 0 0 30px rgba(16,185,129,0.8); z-index: 2;">${currentWord}</h1>
+                <p style="background: rgba(0,0,0,0.3); padding: 8px 25px; border-radius: 20px; color: #fff; margin-top: 25px; font-size: 16px; font-weight: bold; z-index: 2; border: 1px solid rgba(255,255,255,0.1);">فئة: ${currentCategory}</p>
+            `;
+        }
+    }
+
+    const card = document.getElementById('the-card');
+    let pressTimer;
+
+    const startPress = (e) => {
+        if(e.type === 'touchstart') e.preventDefault();
+        pressTimer = setTimeout(() => {
+            playTone('flip');
+            card.classList.add('flipped');
+            cardSeen = true;
+            
+            const nextBtn = document.getElementById('btn-next');
+            nextBtn.style.opacity = '1'; nextBtn.style.pointerEvents = 'auto';
+        }, 400);
+    };
+
+    const cancelPress = () => { clearTimeout(pressTimer); card.classList.remove('flipped'); };
+
+    card.addEventListener('mousedown', startPress);
+    card.addEventListener('mouseup', cancelPress);
+    card.addEventListener('mouseleave', cancelPress);
+    card.addEventListener('touchstart', startPress, {passive: false});
+    card.addEventListener('touchend', cancelPress);
+    card.addEventListener('touchcancel', cancelPress);
+
+    function nextPlayer() {
+        playClick();
+        if(!cardSeen) return;
+        if(currentPlayer < playersCount) { currentPlayer++; updateCardUI(); } 
+        else { startActionPhase(); }
+    }
+
+    function startActionPhase() {
+        showScreen('screen-action');
+        const randomStart = Math.floor(Math.random() * playersCount) + 1;
+        document.getElementById('who-starts-text').innerText = `اللاعب ${randomStart}`;
+        
+        clearInterval(countdownInterval);
+        const timerContainer = document.getElementById('timer-container');
+        const display = document.getElementById('timer-display');
+        display.classList.remove('danger');
+        
+        if (timerEnabled) {
+            timerContainer.style.display = 'block';
+            let time = selectedMinutes * 60;
+            
+            countdownInterval = setInterval(() => {
+                time--;
+                let m = Math.floor(time / 60).toString().padStart(2, '0');
+                let s = (time % 60).toString().padStart(2, '0');
+                display.innerText = `${m}:${s}`;
+                
+                if (time <= 10 && time > 0) { display.classList.add('danger'); playTone('tick'); }
+                if (time <= 0) { clearInterval(countdownInterval); display.innerText = "00:00"; playTone('buzzer'); }
+            }, 1000);
+            
+            let m = Math.floor(time / 60).toString().padStart(2, '0');
+            let s = (time % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+        } else { timerContainer.style.display = 'none'; }
+    }
+
+    function generatePrompt() {
+        const textObj = document.getElementById('discussion-prompt');
+        textObj.style.opacity = '0';
+        textObj.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            const random = discussionPrompts[Math.floor(Math.random() * discussionPrompts.length)];
+            textObj.innerText = random;
+            textObj.style.opacity = '1';
+            textObj.style.transform = 'scale(1)';
+        }, 300);
+    }
+
+    function showResult() {
+        playTone('start');
+        clearInterval(countdownInterval);
+        document.getElementById('reveal-modal').style.display = 'none';
+        document.getElementById('final-imposter').innerText = imposterIndex;
+        
+        const finalWord = document.getElementById('final-word');
+        finalWord.innerText = currentWord;
+        finalWord.style.filter = 'blur(15px)';
+        document.querySelector('.glass-panel[onclick]').style.borderColor = 'var(--glass-border)';
+        
+        showScreen('screen-result');
+    }
+
+    function resetGame() {
+        document.getElementById('timer-toggle').checked = false;
+        toggleTimerSettings();
+        showScreen('screen-home');
+    }
+
+</script>
+</body>
+</html>
